@@ -1,0 +1,5 @@
+name: Molecular_Dynamics
+channels:
+  - conda-forge
+  - defaults
+prefix: /home/dedeassann/miniconda3/envs/Molecular_Dynamics
