@@ -1,0 +1,44 @@
+# REAX potential for CHO system
+# .....
+
+units		real
+
+atom_style	charge
+read_data	C4-l.CHO
+
+pair_style	reax/c lmp_control
+#pair_style	reax/c NULL 
+pair_coeff	* * ffield.reax.cho C H O
+fix             2 all qeq/reax 1 0.0 10.0 1e-6 param.qeq
+
+neighbor	2 bin
+neigh_modify    delay 0 every 1 check yes
+
+# ---------- Run Minimization --------------------- 
+
+fix 1 all box/relax iso 1.0 vmax 0.0001
+
+variable pekJ equal pe*4.184
+
+thermo 100
+#thermo_style custom  step pe v_pekJ enthalpy press vol density temp
+thermo_style custom  step pe v_pekJ
+
+#min_style cg 
+#minimize 1e-25 1e-25 5000 10000 
+#unfix 1
+
+dump 		1 all cfg 200 ./dump/dump.tensile_*.cfg mass type xs ys zs mass q
+dump		2 all atom 20 tmp.dump
+
+min_style       sd
+minimize        1.0e-16 1.0e-16 100000 100000
+
+unfix 1
+
+reset_timestep 0 
+
+
+
+
+

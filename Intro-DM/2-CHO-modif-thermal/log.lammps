@@ -1,0 +1,174 @@
+LAMMPS (28 Jul 2015)
+WARNING: OMP_NUM_THREADS environment is not set. (../comm.cpp:89)
+  using 1 OpenMP thread(s) per MPI task
+# REAX potential for CHO system
+# .....
+
+units		real
+
+atom_style	charge
+
+
+read_data	./C14-l.CHO
+  orthogonal box = (-200 -200 -200) to (200 200 200)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  14 atoms
+
+# ou bien à partir d'un réseau
+#dimension 3
+#region boite block 0 100 0 100 0 100
+#boundary p p p
+
+#lattice fcc 3.52
+#region box block 20 21 20 21 20 21
+
+##units lattice
+
+#create_box   3 boite
+#create_atoms 2 region box
+
+#mass 1  1.0080
+#mass 2 12.0107
+#mass 3 15.9994
+
+pair_style	reax/c lmp_control
+pair_coeff	* * ./ffield.reax.cho H C O
+Reading potential file ./ffield.reax.cho with DATE: 2011-02-18
+fix             2 all qeq/reax 1 0.0 10.0 1e-6 param.qeq
+
+neighbor	2 bin
+neigh_modify    delay 0 every 1 check yes
+
+# ---------- Run Minimization ---------------------
+
+fix 1 all box/relax iso 1.0 vmax 0.0001
+variable pekJ equal pe*4.184
+
+thermo 100
+thermo_style custom  step pe v_pekJ
+
+#min_style cg
+#minimize 1e-25 1e-25 5000 10000
+#unfix 1
+
+#min_style       sd
+#minimize        1.0e-16 1.0e-16 100000 100000
+
+unfix 1
+
+reset_timestep 0
+
+# ---------- Run MD ---------------------
+fix             1 all nvt temp 300.0 1300.0 100.0
+fix             2 all qeq/reax 1 0.0 10.0 1e-6 param.qeq
+fix             3 all temp/berendsen 10.0 2000 1.0
+fix             4 all momentum 1 linear 0 0 0 angular rescale
+
+timestep	1.0
+
+compute              peratom all pe/atom
+compute              pe all reduce sum c_peratom
+
+
+# etotal en kJ/mol
+#variable etotalSI equal etotal*4.184
+
+#thermo_style multi
+#thermo_style custom step  temp etotal v_etotalSI epair ebond pe ke
+thermo_style custom step  temp etotal pe
+
+thermo 2000
+
+#dump		1 all atom 1000 dump.reax.cho
+dump 		1 all cfg 1000 ./dump/dump.tensile_*.cfg mass type xs ys zs mass q
+dump		2 all atom 1000 tmp.dump
+
+run		100000
+Neighbor list info ...
+  2 neighbor list requests
+  update every 1 steps, delay 0 steps, check yes
+  master list distance cutoff = 12
+  ghost atom cutoff = 12
+Memory usage per processor = 9.1745 Mbytes
+Step Temp TotEng PotEng 
+       0            0   -1818.9236   -1818.9236 
+    2000         49.8   -2228.3744   -2230.3042 
+    4000         89.6   -2237.4844   -2240.9564 
+    6000        129.4   -2272.0024   -2277.0167 
+    8000        169.2    -2269.377   -2275.9336 
+   10000          209   -2255.6339   -2263.7327 
+   12000        248.8   -2266.0673   -2275.7085 
+   14000        288.6   -2254.8798   -2266.0632 
+   16000        328.4   -2259.9819   -2272.7075 
+   18000        368.2   -2257.2415   -2271.5095 
+   20000          408   -2231.5801   -2247.3903 
+   22000        447.8   -2225.3554   -2242.7079 
+   24000        487.6   -2245.0374   -2263.9322 
+   26000        527.4   -2235.8089   -2256.2459 
+   28000        567.2   -2223.3572   -2245.3365 
+   30000          607   -2229.9831   -2253.5047 
+   32000        646.8    -2239.884   -2264.9478 
+   34000        686.6   -2233.7919    -2260.398 
+   36000        726.4   -2212.6664   -2240.8147 
+   38000        766.2    -2229.749   -2259.4397 
+   40000          806   -2235.5725   -2266.8055 
+   42000        845.8   -2168.8321   -2201.6073 
+   44000        885.6   -2224.3461   -2258.6635 
+   46000        925.4   -2129.9726   -2165.8323 
+   48000        965.2    -2230.839    -2268.241 
+   50000         1005   -2121.4986   -2160.4429 
+   52000       1044.8   -2222.0822   -2262.5688 
+   54000       1084.6    -2190.776   -2232.8048 
+   56000       1124.4   -2193.0592   -2236.6303 
+   58000       1164.2   -2204.2028   -2249.3162 
+   60000         1204   -2203.4016   -2250.0573 
+   62000       1243.8   -2221.8811    -2270.079 
+   64000       1283.6   -2196.8918    -2246.632 
+   66000       1323.4   -2189.1669   -2240.4494 
+   68000       1363.2   -2189.2446   -2242.0693 
+   70000         1403   -2213.2707   -2267.6377 
+   72000       1442.8   -2143.5584   -2199.4676 
+   74000       1482.6   -2147.4664   -2204.9179 
+   76000       1522.4   -2166.5697   -2225.5635 
+   78000       1562.2   -2141.8972   -2202.4332 
+   80000         1602   -2133.7121   -2195.7904 
+   82000       1641.8   -2122.0198   -2185.6404 
+   84000       1681.6   -2150.0589   -2215.2217 
+   86000       1721.4   -2171.6739   -2238.3791 
+   88000       1761.2   -2082.1477   -2150.3951 
+   90000         1801   -2111.6647   -2181.4544 
+   92000       1840.8   -2151.4177   -2222.7497 
+   94000       1880.6   -2103.6453   -2176.5196 
+   96000       1920.4   -2137.0125    -2211.429 
+   98000       1960.2   -2083.9772    -2159.936 
+  100000         2000   -2110.4325   -2187.9336 
+Loop time of 14.149 on 1 procs (1 MPI x 1 OpenMP) for 100000 steps with 14 atoms
+
+Pair  time (%) = 10.7669 (76.0971)
+Neigh time (%) = 0.171165 (1.20973)
+Comm  time (%) = 0.181948 (1.28595)
+Outpt time (%) = 0.0180798 (0.127782)
+Other time (%) = 3.01082 (21.2794)
+
+Nlocal:    14 ave 14 max 14 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    91 ave 91 max 91 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 91
+Ave neighs/atom = 6.5
+Neighbor list builds = 885
+Dangerous builds = 0
+
+unfix 3
+
+#fix             3 all temp/berendsen 1400.0 10.0 0.5
+#run		400000
+
+
+
+Please see the log.cite file for references relevant to this simulation
+
