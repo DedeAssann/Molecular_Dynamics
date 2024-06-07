@@ -1,0 +1,2 @@
+Intro-DM/logiciels/LAMMPS-64bit-latest.exe filter=lfs diff=lfs merge=lfs -text
+Intro-DM/documentation/lammps-daily-doc.zip filter=lfs diff=lfs merge=lfs -text
