@@ -1,0 +1,61 @@
+# REAX potential for CHO system
+# .....
+
+
+#------------- initialization --------------------
+units		real
+atom_style	charge
+
+#print '${mesh}'
+
+read_restart    ./cinit.restart.500000
+
+
+#------------- force-field --------------------
+#pair_style	reax/c lmp_control
+#pair_coeff	* * ./ffield.reax.2005.cho C H O
+#fix             chargeeq all qeq/reax 1 0.0 10.0 1e-8 param.qeq
+
+pair_style	reax/c lmp_control
+pair_coeff	* * ./ffield.reax.2008.cho C H O
+fix             2 all qeq/reax 1 0.0 10.0 1e-6 param.qeq
+
+#neighbor	2 bin
+#neigh_modify	every 10 delay 0 check no
+#neigh_modify    every 2 delay 10 check yes page 100000
+
+#------------- settings -----------------------
+#compute  reax    all pair reax/c
+#compute  peratom all pe/atom pair
+#compute	 pe2     all reduce sum c_peratom
+#compute  2       all cluster/atom 1.5 
+
+timestep	1.0
+
+thermo_style custom step time temp etotal pe 
+#c_reax[1]
+
+fix	         integrate all nve
+fix              thermostat all temp/berendsen 300 300 500
+fix              momentum all momentum 2000 linear 1 1 1 angular
+
+fix              5 all reax/c/species 2 10 5000 species.out
+fix              6 all reax/c/bonds 5000 bonds.reaxc 
+
+
+#-------minimize
+min_style       sd
+minimize        1.0e-4 1.0e-6 100 1000
+reset_timestep  0
+
+#-------run
+thermo 500000
+
+#restart ${iter} ../${repd}.restart
+
+#dump 		1 all cfg  5000 ../dump/dump_*.cfg mass type xs ys zs mass q c_2 c_peratom
+dump		2 all atom 5000 dump.file
+run		${iter}
+
+
+

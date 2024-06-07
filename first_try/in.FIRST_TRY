@@ -1,0 +1,50 @@
+# defining units : charge, atom, real, metal, etc
+units	real
+
+# defining atom_style : angle, atomic, bond, body, dipole, dielectric, dpd, electron, etc
+# selects the per-atom attributes to associate with atoms in the sim
+atom_style charge
+
+# creation of the simulation box and atoms
+
+# region ID style args keyword arg
+# ID : user defined descriptive name for the said region
+# style : delete, block, cone, cylinder, ellipsoid, plane, prism, etc
+# each style has it's own args. For more info go to https://docs.lammps.org/region.html
+region mybox block 0 10 0 10 0 10 side in	# block uses  xlo xhi ylo yhi zlo zhi as args
+
+# Creation the box
+# create_box N region-ID keyword value
+# N : number of atoms to use in the simulation
+# keyword : bond/types, angle/types, dihedral/types, improper/types, extra/bond/per/atom, etc
+# For more info go to https://docs.lammps.org/create_box.html
+# value : zero or more keyword/value pairs may be appended
+create_box 2 mybox
+
+# Creation of the atoms
+# create_atoms type style args keyword values
+# type : ..
+# style : box or region
+# ...
+create_atoms 1 random 2 12345 NULL overlap 3.0 maxtry 50
+
+# Pair style for atom interactions
+# pair_style style args
+# style : lj/cut(Lennard-Jones), eam/alloy(EAM potential), hybrid lj/charmm/coul/long 10 eam, etc
+# args : args used by a particular style
+pair_style lj/cut 2.5
+pair_coeff * * 1 1
+
+# Neighbor
+neighbor 3 bin
+neigh_modify every 10 delay 0 check no
+
+# Fixes for time integration and constraints
+# ...
+
+
+
+
+
+
+

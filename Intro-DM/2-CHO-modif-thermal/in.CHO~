@@ -1,0 +1,86 @@
+# REAX potential for CHO system
+# .....
+
+units		real
+
+atom_style	charge
+
+
+read_data	./C14-l.CHO
+
+# ou bien à partir d'un réseau
+#dimension 3 
+#region boite block 0 100 0 100 0 100
+#boundary p p p 
+
+#lattice fcc 3.52
+#region box block 20 21 20 21 20 21 
+
+##units lattice
+
+#create_box   3 boite
+#create_atoms 2 region box
+
+#mass 1  1.0080
+#mass 2 12.0107
+#mass 3 15.9994
+
+pair_style	reax/c lmp_control
+pair_coeff	* * ./ffield.reax.cho H C O
+fix             2 all qeq/reax 1 0.0 10.0 1e-6 param.qeq
+
+neighbor	2 bin
+neigh_modify    delay 0 every 1 check yes
+
+# ---------- Run Minimization --------------------- 
+
+fix 1 all box/relax iso 1.0 vmax 0.0001
+variable pekJ equal pe*4.184
+
+thermo 100
+thermo_style custom  step pe v_pekJ
+
+#min_style cg 
+#minimize 1e-25 1e-25 5000 10000 
+#unfix 1
+
+#min_style       sd
+#minimize        1.0e-16 1.0e-16 100000 100000
+
+unfix 1
+
+reset_timestep 0 
+
+# ---------- Run MD --------------------- 
+fix             1 all nvt temp 300.0 1300.0 100.0
+fix             2 all qeq/reax 1 0.0 10.0 1e-6 param.qeq
+fix             3 all temp/berendsen 10.0 2000 1.0
+fix             4 all momentum 1 linear 0 0 0 angular rescale
+
+timestep	1.0
+
+compute              peratom all pe/atom
+compute              pe all reduce sum c_peratom
+
+
+# etotal en kJ/mol
+#variable etotalSI equal etotal*4.184
+
+#thermo_style multi
+#thermo_style custom step  temp etotal v_etotalSI epair ebond pe ke
+thermo_style custom step  temp etotal pe 
+
+thermo 2000
+
+#dump		1 all atom 1000 dump.reax.cho
+dump 		1 all cfg 1000 ./dump/dump.tensile_*.cfg mass type xs ys zs mass q
+dump		2 all atom 1000 tmp.dump
+
+run		100000
+
+unfix 3
+
+#fix             3 all temp/berendsen 1400.0 10.0 0.5
+#run		400000
+
+
