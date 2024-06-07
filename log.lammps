@@ -1,0 +1,9 @@
+LAMMPS (15 Jun 2023)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+Open of file C:\Users\adede\Desktop\LAMMPS USER-BFIELD Plugin 17Apr2024-MSMPI\bfieldplugin.so failed: 
+Loaded 0 plugins from C:\Users\adede\Desktop\LAMMPS USER-BFIELD Plugin 17Apr2024-MSMPI
+Loaded 1 plugins from C:\Users\adede\AppData\Local\LAMMPS 64-bit 15Jun2023\plugins
+exit
+ERROR: Unknown command: exit (src/input.cpp:303)
+Last command: exit
