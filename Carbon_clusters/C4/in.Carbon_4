@@ -1,0 +1,53 @@
+#============Initialization=================
+units 			metal
+atom_style 		atomic
+boundary 		f f f
+
+#=========Simulation box definition=========
+region 			bigbox block 0 10 0 10 0 10
+create_box 		1 bigbox
+
+#==================Atoms====================
+region 			safezone block 1 9 1 9 1 9
+create_atoms 	1 random 4 12345 safezone
+labelmap 		atom 1 C
+mass 			* 12.01
+
+#==========Velocity initialization==========
+velocity 		all create 1.0 12345 rot yes dist gaussian
+
+#======Pair style for atom interactions=============
+pair_style 		airebo 2.5
+pair_coeff 		* * CH.airebo C
+
+#==============Neighbor selection===================
+neighbor 		0.3 bin
+neigh_modify 	every 2 delay 10 check yes
+
+#====Fixes for time integration and constraints=====
+fix 			1 all nve
+fix 			2 all temp/berendsen 300.0 3000.0 0.1
+
+#==============Custom Wall force====================
+#==========Wall with harmonic potential=============
+variable        k equal 100.0
+
+fix             xlo_wall all wall/harmonic xlo EDGE v_k 1.0 0.7
+fix             xhi_wall all wall/harmonic xhi EDGE v_k 1.0 0.7
+fix             ylo_wall all wall/harmonic ylo EDGE v_k 1.0 0.7
+fix             yhi_wall all wall/harmonic yhi EDGE v_k 1.0 0.7
+fix             zlo_wall all wall/harmonic zlo EDGE v_k 1.0 0.7
+fix             zhi_wall all wall/harmonic zhi EDGE v_k 1.0 0.7
+
+#=====================Timestep======================
+timestep 		0.0001
+
+#========System temperature printing info===========
+thermo_style 	custom step temp etotal pe 
+thermo 			500
+
+#===============Define dump command=================
+dump 			1 all cfg 200 ./dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz id
+
+#================Run simulation=====================
+run 			200000
