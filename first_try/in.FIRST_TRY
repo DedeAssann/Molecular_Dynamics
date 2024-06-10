@@ -9,8 +9,8 @@ create_box  	1 mybox
 
 #============Atoms=======================
 create_atoms 	1 random 10 12345 mybox
-# labelmap 		atom 1 H
-mass 			* 1.0
+labelmap 		atom 1 H
+mass 			H 1.0
 
 #=========Velocity initialization===================
 velocity 		all create 0.001 12345 rot yes dist gaussian
