@@ -1,0 +1,42 @@
+#============Initialization=================
+units 			metal
+atom_style 		atomic
+boundary 		p p p
+
+
+#=========Simulation box definition=========
+region 			bigbox block 0 100 0 100 0 100
+create_box 		1 bigbox
+
+#==================Atoms====================
+create_atoms 	1 random 10 12345 bigbox
+labelmap 		atom 1 C
+mass 			C 12.01
+
+#==========Velocity initialization==========
+velocity 		all create 300.0 12345 rot yes dist gaussian
+
+#======Pair style for atom interactions=============
+pair_style 		lj/cut 2.5 #airebo 2.5 1 0
+pair_coeff 		* * ./potentials/CH.airebo
+
+#==============Neighbor selection===================
+neighbor 		0.3 bin
+neigh_modify 	every 2 delay 10 check yes
+
+#====Fixes for time integration and constraints=====
+fix 			1 all nve
+fix 			2 all temp/berendsen 300.0 3000.0 0.1
+
+#=====================Timestep======================
+timestep 		0.001
+
+#========System temperature printing info===========
+thermo_style 	custom step temp etotal pe 
+thermo 			1000
+
+#===============Define dump command=================
+dump 			1 all cfg 5000 ./dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz id
+
+#================Run simulation=====================
+run 			50000
