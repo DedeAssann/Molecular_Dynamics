@@ -123,6 +123,7 @@ venv.bak/
 # file extension
 *.zip
 *.exe
+*.yml
 
 # mypy
 .mypy_cache/
