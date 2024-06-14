@@ -7,7 +7,7 @@ boundary 		p p p
 #              CLI Variables               #
 ############################################
 variable 		seed index 200093          #
-variable 		N index 8                  #
+variable 		N index 6                  #
 variable 		iter index 100000000       #
 variable 		iterther index 1000000     #
 variable 		iexport index 1000000      #
@@ -22,7 +22,7 @@ region 			bigbox block 0 100 0 100 0 100
 create_box 		1 bigbox
 
 #==================Atoms====================
-region 			safezone block 40 60 40 60 40 60 units box
+region 			safezone block 45 65 45 65 45 65 units box
 create_atoms 	1 random ${N} ${seed} safezone
 labelmap 		atom 1 C
 mass 			* 12.01
@@ -33,7 +33,7 @@ mass 			* 12.01
 velocity 		all create 0.0000001 1563967 rot yes dist gaussian
 
 #======Pair style for atom interactions=============
-pair_style 		airebo 1.5 1 1
+pair_style 		airebo 1.8 1 1
 pair_coeff 		* * CH.airebo C
 
 #==============Neighbor selection===================
@@ -76,7 +76,7 @@ thermo 			${iexport}	# 1'000'000
 #minimize        1.0e-5 1.0e-7 500 1000
 
 fix 			1 all nve
-fix 			2 all temp/berendsen 600 ${tempchauf} ${Tdamp}
+fix 			2 all temp/berendsen 0.0 ${tempchauf} ${Tdamp}
 fix             3 all momentum 1 linear 1 1 1 angular rescale
 
 run 			${iter}
@@ -97,11 +97,11 @@ write_restart 	./endconf/endconf*2.restart
 #=================Cooling Phase=====================
 
 # Re-minimize before cooling
-min_style       sd
-minimize        1.0e-5 1.0e-7 500 1000
+#min_style       sd
+#minimize        1.0e-5 1.0e-7 500 1000
 
 unfix 			4
-fix 			5 all temp/berendsen ${tempchauff} 0.0 ${Tdamp}
+fix 			5 all temp/berendsen ${tempchauf} 0.0 ${Tdamp}
 
 run 			${iter}
 write_restart 	./endconf/endconf*3.restart
