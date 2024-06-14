@@ -1,0 +1,93 @@
+# EAM potentiel for W system
+# .....
+#-------------Define units and atom style------------
+
+units		metal
+boundary p p p	
+atom_style	charge
+
+############################################
+#              CLI Variables               #
+############################################
+variable 		seed index 200093          #
+variable 		N index 25                 #
+variable 		iter index 5000000         #
+variable 		iterther index 100000      #
+variable 		iexport index 10000        #
+variable 		tempchauf index 5000       #
+variable 		Tdamp index 0.01           #
+variable 		timestep index 0.0001      #
+############################################
+############################################
+
+
+#-------------Simulation box--------------	
+
+lattice   sc 1.0
+ 
+region     bigbox block 0 40 0 40 0 40
+create_box     2 bigbox
+
+region          smallbox block 10 30 10 30 10 30 units box
+
+#------------create atoms randomly in the small box--------
+	
+create_atoms    1 random ${N} ${seed} smallbox
+
+mass * 183.84
+
+#------------Define the interatomic potential -------------
+
+pair_style eam/fs
+pair_coeff * * ./w.eam2.fs W W
+
+neighbor	0.3 bin
+neigh_modify    delay 0 every 1 check yes
+
+#--------------set initial velocity to all atoms------
+
+velocity   all create  0.001 1563967 rot yes dist gaussian
+
+# ---------- Run MD Heating ---------------------
+
+fix              2 all nve 
+fix              3 all temp/berendsen  0.0 ${tempchauf} ${Tdamp}
+fix              4 all momentum 1 linear 1 1 1 angular rescale
+
+
+timestep	${timestep}
+
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+
+dump 		1 all cfg 1000 ./dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q
+dump		2 all atom 1000 tmp.dump
+dump_modify     1 element W W
+
+run		${iter}
+
+write_restart ./endconf/endconf*1.restart
+
+# ---------- Run MD wait phase: relaxation at Tmax ---------------------
+
+unfix 3
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+fix             6 all temp/berendsen  ${tempchauf} ${tempchauf} ${Tdamp}
+run		${iterther}
+
+write_restart ./endconf/endconf*2.restart
+
+# ---------- Run MD cooling phase down to T=0K ---------------------
+unfix 6
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+fix             7 all temp/berendsen  ${tempchauf} 0.0 ${Tdamp}
+run		${iter}
+write_restart ./endconf/endconf*3.restart
+
+
+

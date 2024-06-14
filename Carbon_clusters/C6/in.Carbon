@@ -8,21 +8,21 @@ boundary 		p p p
 ############################################
 variable 		seed index 200093          #
 variable 		N index 6                  #
-variable 		iter index 100000000       #
-variable 		iterther index 1000000     #
+variable 		iter index 1000000000      #
+variable 		iterther index 100000000   #
 variable 		iexport index 1000000      #
-variable 		tempchauf index 3000       #
+variable 		tempchauf index 4000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
 ############################################
 ############################################
 #=========Simulation box definition=========
 lattice 		sc 1.0
-region 			bigbox block 0 100 0 100 0 100
+region 			bigbox block 0 40 0 40 0 40
 create_box 		1 bigbox
 
 #==================Atoms====================
-region 			safezone block 45 65 45 65 45 65 units box
+region 			safezone block 20 30 20 30 20 30 units box
 create_atoms 	1 random ${N} ${seed} safezone
 labelmap 		atom 1 C
 mass 			* 12.01
