@@ -11,18 +11,19 @@ variable 		N index 8                  #
 variable 		iter index 1000000         #
 variable 		iterther index 100000      #
 variable 		iexport index 1000         #
-variable 		tempchauf index 4000       #
+variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
+variable 		box_size index 40		   #
 ############################################
 ############################################
 #=========Simulation box definition=========
 lattice 		sc 1.0
-region 			bigbox block 0 15 0 15 0 15
+region 			bigbox block 0 ${box_size} 0 ${box_size} 0 ${box_size}
 create_box 		1 bigbox
 
 #==================Atoms====================
-region 			safezone block 6 11 6 11 6 11 units box
+region 			safezone block 6 9 6 9 6 9 units box
 create_atoms 	1 random ${N} ${seed} safezone
 labelmap 		atom 1 C
 mass 			* 12.01
