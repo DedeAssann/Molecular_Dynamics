@@ -28,7 +28,7 @@ lattice   sc 1.0
 region     bigbox block 0 40 0 40 0 40
 create_box     2 bigbox
 
-region          smallbox block 10 30 10 30 10 30 units box
+region          smallbox block 5 35 5 35 5 35 units box
 
 #------------create atoms randomly in the small box--------
 	
