@@ -10,13 +10,14 @@ atom_style	charge
 #              CLI Variables               #
 ############################################
 variable 		seed index 200093          #
-variable 		N index 25                 #
+variable 		N index 2                  #
 variable 		iter index 5000000         #
 variable 		iterther index 100000      #
 variable 		iexport index 10000        #
 variable 		tempchauf index 5000       #
-variable 		Tdamp index 0.01           #
+variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
+variable 		box_size index 80		   #
 ############################################
 ############################################
 
@@ -25,10 +26,10 @@ variable 		timestep index 0.0001      #
 
 lattice   sc 1.0
  
-region     bigbox block 0 40 0 40 0 40
+region     bigbox block 0 ${box_size} 0 ${box_size} 0 ${box_size}
 create_box     2 bigbox
 
-region          smallbox block 5 35 5 35 5 35 units box
+region          smallbox block 10 30 10 30 10 30 units box
 
 #------------create atoms randomly in the small box--------
 	
@@ -61,13 +62,13 @@ timestep	${timestep}
 thermo 1000
 thermo_style custom step  temp etotal epair ebond pe ke
 
-dump 		1 all cfg 1000 ./dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q
-dump		2 all atom 1000 tmp.dump
+dump 			1 all cfg 1000 ./dump/${N}/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q id
+dump			2 all atom 1000 ./tmp/${N}/tmp.dump
 dump_modify     1 element W W
 
-run		${iter}
+run				${iter}
 
-write_restart ./endconf/endconf*1.restart
+write_restart ./endconf/${N}/endconf*1.restart
 
 # ---------- Run MD wait phase: relaxation at Tmax ---------------------
 
@@ -78,7 +79,7 @@ thermo_style custom step  temp etotal epair ebond pe ke
 fix             6 all temp/berendsen  ${tempchauf} ${tempchauf} ${Tdamp}
 run		${iterther}
 
-write_restart ./endconf/endconf*2.restart
+write_restart ./endconf/${N}/endconf*2.restart
 
 # ---------- Run MD cooling phase down to T=0K ---------------------
 unfix 6
@@ -87,7 +88,7 @@ thermo 1000
 thermo_style custom step  temp etotal epair ebond pe ke
 fix             7 all temp/berendsen  ${tempchauf} 0.0 ${Tdamp}
 run		${iter}
-write_restart ./endconf/endconf*3.restart
+write_restart ./endconf/${N}/endconf*3.restart
 
 
 

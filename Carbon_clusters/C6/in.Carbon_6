@@ -14,7 +14,7 @@ variable 		iexport index 1000         #
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
-variable 		box_size index 40		   #
+variable 		box_size index 30		   #
 ############################################
 ############################################
 #=========Simulation box definition=========
