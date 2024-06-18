@@ -10,26 +10,26 @@ atom_style	charge
 #              CLI Variables               #
 ############################################
 variable 		seed index 200093          #
-variable 		N index 2                  #
-variable 		iter index 5000000         #
-variable 		iterther index 100000      #
-variable 		iexport index 10000        #
+variable 		N index 2000               #
+variable 		iter index 50000           #
+variable 		iterther index 10000       #
+variable 		iexport index 5000         #
 variable 		tempchauf index 5000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
-variable 		box_size index 80		   #
+variable 		box_size index 30		   #
 ############################################
 ############################################
 
 
 #-------------Simulation box--------------	
 
-lattice   sc 1.0
+lattice   bcc 3.52
  
 region     bigbox block 0 ${box_size} 0 ${box_size} 0 ${box_size}
 create_box     2 bigbox
 
-region          smallbox block 10 30 10 30 10 30 units box
+region          smallbox block 10 20 10 20 10 20 units box
 
 #------------create atoms randomly in the small box--------
 	

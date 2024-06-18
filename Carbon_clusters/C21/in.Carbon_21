@@ -6,23 +6,24 @@ boundary 		p p p
 ############################################
 #              CLI Variables               #
 ############################################
-variable 		seed index 787280          #
+variable 		seed index 200093          #
 variable 		N index 21                 #
-variable 		iter index 100000000       #
+variable 		iter index 10000000        #
 variable 		iterther index 1000000     #
-variable 		iexport index 1000000      #
+variable 		iexport index 100000       #
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
+variable 		box_size index 40		   #
 ############################################
 ############################################
 #=========Simulation box definition=========
 lattice 		sc 1.0
-region 			bigbox block 0 100 0 100 0 100
+region 			bigbox block 0 ${box_size} 0 ${box_size} 0 ${box_size}
 create_box 		1 bigbox
 
 #==================Atoms====================
-region 			safezone block 45 65 45 65 45 65 units box
+region 			safezone block 27 30 27 30 27 30 units box
 create_atoms 	1 random ${N} ${seed} safezone
 labelmap 		atom 1 C
 mass 			* 12.01

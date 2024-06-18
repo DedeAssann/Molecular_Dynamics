@@ -1,0 +1,77 @@
+units metal
+dimension 3
+boundary p p p
+atom_style charge
+
+# Define the lattice structure
+lattice bcc 3.52
+
+# Define the region where atoms will be created
+region my_region block 0 10 0 10 0 10
+
+# Create the simulation box
+create_box 2 my_region
+
+# Populate the simulation box with atoms according to the defined lattice
+create_atoms 2 random 100 200093 my_region
+mass * 183.84
+
+# Define interatomic potential
+pair_style eam/fs
+pair_coeff * * ./w.eam2.fs W W
+
+velocity   all create  0.000000001 1563967 rot yes dist gaussian
+
+############################################
+#              CLI Variables               #
+############################################
+variable 		iter index 10000000        #
+variable 		iterther index 1000000     #
+variable 		iexport index 5000         #
+variable 		tempchauf index 5000       #
+variable 		Tdamp index 0.001          #
+variable 		timestep index 0.0001      #
+
+
+
+# ---------- Run MD Heating ---------------------
+
+fix              2 all nve 
+fix              3 all temp/berendsen  0.0 ${tempchauf} ${Tdamp}
+#fix              4 all momentum 1 linear 1 1 1 angular rescale
+
+
+timestep	${timestep}
+
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+
+dump 			1 all cfg 1000 ./dump/fcc_1/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q id
+dump			2 all atom 1000 ./tmp/fcc_1/tmp.dump
+dump_modify     1 element W W
+
+run				${iter}
+
+write_restart ./endconf/fcc_1/endconf*1.restart
+
+# ---------- Run MD wait phase: relaxation at Tmax ---------------------
+
+unfix 3
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+fix             6 all temp/berendsen  ${tempchauf} ${tempchauf} ${Tdamp}
+run		${iterther}
+
+write_restart ./endconf/fcc_1/endconf*2.restart
+
+# ---------- Run MD cooling phase down to T=0K ---------------------
+unfix 6
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+fix             7 all temp/berendsen  ${tempchauf} 0.0 ${Tdamp}
+run		${iter}
+write_restart ./endconf/fcc_1/endconf*3.restart
+
