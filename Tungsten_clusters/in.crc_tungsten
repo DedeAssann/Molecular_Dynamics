@@ -1,0 +1,74 @@
+# LAMMPS input script to load a restart file and perform minimization
+
+#============Initialization=================
+units 			metal
+boundary 		p p p
+atom_style 		charge
+
+
+# Read the restart file directly
+read_restart 	./endconf/bcc/endconf100001.restart
+
+#======Pair style for atom interactions=====
+pair_style eam/fs
+pair_coeff * * ./w.eam2.fs W
+
+
+############################################
+#              CLI Variables               #
+############################################
+variable 		seed index 200093          #
+variable 		N index 2000               #
+variable 		iter index 1000000000      # 1.0e9 => 1.0e-4 s
+variable 		iterther index 100000000   # 1.0e8
+variable 		iexport index 100000000    # 1.0e8
+variable 		tempchauf index 3000       #
+variable 		Tdamp index 0.1            #
+variable 		timestep index 0.01	       #
+variable 		box_size index 30		   #
+############################################
+############################################
+
+
+
+# ---------- Run MD Heating ---------------------
+
+fix              2 all nve 
+fix              3 all temp/berendsen  0.0 ${tempchauf} ${Tdamp}
+fix              4 all momentum 1 linear 1 1 1 angular rescale
+
+
+timestep	${timestep}
+
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+
+dump 			1 all cfg ${iexport} ./dump/bcc_chauf_real/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q id
+dump			2 all atom ${iexport} ./tmp/bcc_chauf_real/tmp.dump
+dump_modify     1 element W
+
+run				${iter}
+
+write_restart ./endconf/bcc_chauf_real/endconf*1.restart
+
+# ---------- Run MD wait phase: relaxation at Tmax ---------------------
+
+unfix 3
+
+thermo 1000
+thermo_style custom step  temp etotal epair ebond pe ke
+fix             6 all temp/berendsen  ${tempchauf} ${tempchauf} ${Tdamp}
+run		${iterther}
+
+write_restart ./endconf/bcc_chauf_real/endconf*2.restart
+
+# ---------- Run MD cooling phase down to T=0K ---------------------
+unfix 6
+
+thermo ${iexport}
+thermo_style custom step  temp etotal epair ebond pe ke
+fix             7 all temp/berendsen  ${tempchauf} 0.0 ${Tdamp}
+run		${iter}
+write_restart ./endconf/bcc_chauf_real/endconf*3.restart
+

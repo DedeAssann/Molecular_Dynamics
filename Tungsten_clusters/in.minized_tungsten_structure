@@ -1,0 +1,21 @@
+# LAMMPS input script to load a restart file and perform minimization
+
+#============Initialization=================
+units 			metal
+atom_style 		charge
+
+
+# Read the restart file directly
+read_restart 	./endconf/bcc/endconf100001.restart
+
+#======Pair style for atom interactions=====
+pair_style eam/fs
+pair_coeff * * ./w.eam2.fs W
+
+#=========Minimization settings==========
+min_style       sd
+minimize        1.0e-5 1.0e-7 500 1000
+
+
+# Output the minimized structure
+write_data ./endconf/bcc/minimized_structure.data
