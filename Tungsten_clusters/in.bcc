@@ -7,7 +7,7 @@ atom_style charge
 lattice bcc 3.52
 
 # Define the region where atoms will be created
-region my_region block 0 10 0 10 0 10
+region my_region block 0 3 0 3 0 3
 
 # Create the simulation box
 create_box 1 my_region
@@ -30,4 +30,4 @@ dump_modify     1 element W
 thermo 100
 run 10000
 
-write_restart ./endconf/bcc/endconf*1.restart
+write_data ./endconf/bcc/endconf*1.data

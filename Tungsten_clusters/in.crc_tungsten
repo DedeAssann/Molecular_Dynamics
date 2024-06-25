@@ -7,7 +7,7 @@ atom_style 		charge
 
 
 # Read the restart file directly
-read_restart 	./endconf/bcc/endconf100001.restart
+read_data 	./endconf/bcc/endconf100001.data
 
 #======Pair style for atom interactions=====
 pair_style eam/fs
@@ -19,12 +19,12 @@ pair_coeff * * ./w.eam2.fs W
 ############################################
 variable 		seed index 200093          #
 variable 		N index 2000               #
-variable 		iter index 1000000000      # 1.0e9 => 1.0e-4 s
-variable 		iterther index 100000000   # 1.0e8
-variable 		iexport index 100000000    # 1.0e8
+variable 		iter index 1000000         # 1.0e6 => 1.0e-7 s
+variable 		iterther index 100000      # 1.0e5
+variable 		iexport index 100000       # 1.0e5
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.1            #
-variable 		timestep index 0.01	       #
+variable 		timestep index 0.0001	   #
 variable 		box_size index 30		   #
 ############################################
 ############################################
