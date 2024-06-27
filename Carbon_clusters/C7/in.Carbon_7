@@ -10,7 +10,7 @@ variable 		seed index 200093          #
 variable 		N index 7                  #
 variable 		iter index 1000000         #
 variable 		iterther index 100000      #
-variable 		iexport index 1000         #
+variable 		iexport index 50000        #
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
@@ -56,6 +56,7 @@ thermo 			${iexport}
 #====================CRC Cycle======================
 
 #=============Condensation et chauffe===============
+fix 			data all print 10000 "Step : ${Step} Temp : ${temp}" file data.txt screen no
 fix 			1 all nve
 fix 			2 all temp/berendsen 0.0 ${tempchauf} ${Tdamp}
 fix             3 all momentum 1 linear 1 1 1 angular rescale

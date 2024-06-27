@@ -14,7 +14,7 @@ variable 		iexport index 1000         #
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
-variable 		box_size index 100		   #
+variable 		box_size index 40		   #
 ############################################
 ############################################
 
@@ -37,7 +37,7 @@ pair_style 		rebo
 pair_coeff 		* * CH.rebo C
 
 #==============Neighbor selection===================
-neighbor 		0.3 bin
+neighbor 		2.0 bin
 neigh_modify 	every 1 delay 0 check yes
 
 
