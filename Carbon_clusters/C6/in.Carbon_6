@@ -14,7 +14,7 @@ variable 		iexport index 1000         #
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
-variable 		box_size index 30		   #
+variable 		box_size index 100		   #
 ############################################
 ############################################
 
@@ -34,11 +34,11 @@ mass 			* 12.01
 velocity 		all create 0.0000001 1563967 rot yes dist gaussian
 
 #======Pair style for atom interactions=============
-pair_style 		airebo 1.8 1 1
+pair_style 		airebo 1.8
 pair_coeff 		* * CH.airebo C
 
 #==============Neighbor selection===================
-neighbor 		0.3 bin
+neighbor 		2.0 bin
 neigh_modify 	every 1 delay 0 check yes
 
 
