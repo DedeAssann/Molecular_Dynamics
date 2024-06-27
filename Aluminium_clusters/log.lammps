@@ -1,0 +1,55 @@
+LAMMPS (29 Sep 2021 - Update 2)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+units metal
+dimension 3
+boundary p p p
+atom_style charge
+
+# Define the lattice structure
+lattice fcc 4.05
+Lattice spacing in x,y,z = 4.0500000 4.0500000 4.0500000
+
+# Define the region where atoms will be created
+region my_region block 0 10 0 10 0 10
+
+# Create the simulation box
+create_box 1 my_region
+Created orthogonal box = (0.0000000 0.0000000 0.0000000) to (40.500000 40.500000 40.500000)
+  1 by 1 by 1 MPI processor grid
+
+# Populate the simulation box with atoms according to the defined lattice
+create_atoms 1 region my_region
+Created 4000 atoms
+  using lattice units in orthogonal box = (0.0000000 0.0000000 0.0000000) to (40.500000 40.500000 40.500000)
+  create_atoms CPU = 0.001 seconds
+mass * 26.98
+
+velocity   all create  0.001 1563967 rot yes dist gaussian
+
+# Define interatomic potential
+pair_style eam/alloy
+pair_coeff * * ./Al-LEA.eam.alloy Al
+
+dump 			1 all cfg 1000 ./dump/fcc/dump.tensile_*.cfg mass type xs ys zs vx vy vz q id
+dump			2 all atom 1000 ./tmp/fcc/tmp.dump
+dump_modify     1 element Al
+
+# Additional commands to run the simulation
+thermo 100
+run 10000
+WARNING: No fixes defined, atoms won't move (src/verlet.cpp:55)
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.0630635
+  ghost atom cutoff = 8.0630635
+  binsize = 4.0315317, bins = 11 11 11
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton
+      stencil: half/bin/3d
+      bin: standard
+ERROR on proc 0: Cannot open dump file (src/dump.cpp:604)
+Last command: run 10000
