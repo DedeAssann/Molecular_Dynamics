@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "48f2d5fea22ea58e",
+        "id": "f3accdf1ebc0d424",
         "type": "tabs",
         "children": [
           {
-            "id": "4281353fc38fc4e8",
+            "id": "e203a6c709b5f31a",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "6f4a70b277d90b64",
@@ -149,20 +148,19 @@
       "obsidian-advanced-slides:Show Slide Preview": false
     }
   },
-  "active": "4281353fc38fc4e8",
+  "active": "e203a6c709b5f31a",
   "lastOpenFiles": [
-    "slides_lspm_officiel.pptx",
     "Soutenance de Stage.md",
     "Soutenance de stage.md",
-    "Carbon_clusters/C7/dump",
-    "Carbon_clusters/C7/New folder",
-    "Carbon_clusters/C6/dump",
-    "Carbon_clusters/C6/New folder",
-    "potentials/Al-LEA.eam.alloy",
-    "potentials/Al_2020.pinn",
-    "potentials/potential-WHHe-EAM1.eam.alloy",
-    "Carbon_clusters/C7/endconf/endconf11000422.restart",
-    "Carbon_clusters/C7/endconf/endconf21000423.restart",
-    "Carbon_clusters/C7/dump/dump.tensile_1000042.cfg"
+    "Carbon_clusters/temporary/dump/dump.tensile_6700000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9900000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9800000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9700000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9600000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9500000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_7200000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9400000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9300000.cfg",
+    "Carbon_clusters/temporary/dump/dump.tensile_9200000.cfg"
   ]
 }

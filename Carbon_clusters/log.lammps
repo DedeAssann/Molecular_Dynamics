@@ -1,0 +1,54 @@
+LAMMPS (29 Sep 2021 - Update 2)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+# REBOII potentiel for c system
+# .....
+
+units		metal
+boundary p p p
+atom_style	charge
+
+############################################
+#              CLI Variables               #
+############################################
+variable 		seed index 200093          #
+variable 		N index 7                  #
+variable 		iter index 1000000         #
+variable 		iterther index 100000      #
+variable 		iexport index 50000        #
+variable 		tempchauf index 3000       #
+variable 		Tdamp index 0.001          #
+variable 		timestep index 0.0001      #
+variable 		box_size index 10		   #
+############################################
+############################################
+
+#----------------------- simulation box --------------------------------------------------
+lattice   sc 1.0
+Lattice spacing in x,y,z = 1.0000000 1.0000000 1.0000000
+
+region     bigbox block 0 100 0 100 0 100
+create_box     2 bigbox
+Created orthogonal box = (0.0000000 0.0000000 0.0000000) to (100.00000 100.00000 100.00000)
+  1 by 1 by 1 MPI processor grid
+
+region          smallbox block 40 60 40 60 40 60 units box
+#region	        mysphere sphere 50.0 50.0 50.0 2.0 units box
+
+create_atoms    1 random ${N} ${seed} smallbox
+create_atoms    1 random 7 ${seed} smallbox
+create_atoms    1 random 7 200093 smallbox
+Created 7 atoms
+  using lattice units in orthogonal box = (0.0000000 0.0000000 0.0000000) to (100.00000 100.00000 100.00000)
+  create_atoms CPU = 0.001 seconds
+
+#create_atoms    1 random ${nbatoms} 268752 bigbox
+mass * 12.0107
+
+#----------------------- interaction potential -------------------------------------------
+pair_style  rebo
+pair_coeff * * ./CH.airebo C C	# see the file
+Reading rebo potential file ./CH.airebo with DATE: 2011-10-25
+ERROR on proc 0: Potential file does not match AIREBO/REBO style variant: # REBO2 : # AIREBO Brenner/Stuart potential
+ (src/MANYBODY/pair_airebo.cpp:3390)
+Last command: pair_coeff * * ./CH.airebo C C	# see the file
