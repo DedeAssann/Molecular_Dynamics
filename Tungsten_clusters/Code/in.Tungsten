@@ -10,14 +10,14 @@ atom_style	charge
 #              CLI Variables               #
 ############################################
 variable 		seed index 200093          #
-variable 		N index 9	               #
-variable 		iter index 10000000		   #
-variable 		iterther index 1000000     #
-variable 		iexport index 1000000      #
-variable 		tempchauf index 3500       #
+variable 		N index 54	               #
+variable 		iter index 1000000		   #
+variable 		iterther index 100000     #
+variable 		iexport index 100000      #
+variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
-variable 		box_size index 20		   #
+variable 		box_size index 40		   #
 ############################################
 ############################################
 
@@ -29,7 +29,7 @@ variable 		box_size index 20		   #
 region     bigbox block 0 ${box_size} 0 ${box_size} 0 ${box_size}
 create_box     1 bigbox
 
-region          smallbox block 10 30 10 30 10 30 units box
+region          smallbox block 10 20 10 20 10 20 units box
 
 #------------create atoms randomly in the small box--------
 	
@@ -40,7 +40,8 @@ mass * 183.84
 #------------Define the interatomic potential -------------
 
 pair_style eam/fs
-pair_coeff * * ../potentials/W.eam.fs W
+pair_coeff * * ../../potentials/w.eam2.fs W
+
 neighbor	0.3 bin
 neigh_modify    delay 0 every 1 check yes
 
@@ -62,7 +63,7 @@ thermo 1000
 thermo_style custom step  temp etotal epair ebond pe ke
 
 dump 			1 all cfg 1000 ./dump/${N}/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q id
-dump			2 all atom 1000 ./tmp/${N}/tmp.dump
+
 dump_modify     1 element W
 
 run				${iter}

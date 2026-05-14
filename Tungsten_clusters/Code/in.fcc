@@ -47,13 +47,13 @@ timestep	${timestep}
 thermo 1000
 thermo_style custom step  temp etotal epair ebond pe ke
 
-dump 			1 all cfg 1000 ./dump/fcc_1/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q id
-dump			2 all atom 1000 ./tmp/fcc_1/tmp.dump
+dump 			1 all cfg 1000 ./dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz mass q id
+dump			2 all atom 1000 ./tmp/tmp.dump
 dump_modify     1 element W W
 
 run				${iter}
 
-write_restart ./endconf/fcc_1/endconf*1.restart
+write_restart ./endconf/endconf*1.restart
 
 # ---------- Run MD wait phase: relaxation at Tmax ---------------------
 
@@ -64,7 +64,7 @@ thermo_style custom step  temp etotal epair ebond pe ke
 fix             6 all temp/berendsen  ${tempchauf} ${tempchauf} ${Tdamp}
 run		${iterther}
 
-write_restart ./endconf/fcc_1/endconf*2.restart
+write_restart ./endconf/endconf*2.restart
 
 # ---------- Run MD cooling phase down to T=0K ---------------------
 unfix 6
@@ -73,5 +73,5 @@ thermo 1000
 thermo_style custom step  temp etotal epair ebond pe ke
 fix             7 all temp/berendsen  ${tempchauf} 0.0 ${Tdamp}
 run		${iter}
-write_restart ./endconf/fcc_1/endconf*3.restart
+write_restart ./endconf/endconf*3.restart
 

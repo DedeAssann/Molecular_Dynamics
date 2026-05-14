@@ -22,12 +22,12 @@ velocity   all create  0.001 1563967 rot yes dist gaussian
 pair_style eam/alloy
 pair_coeff * * ./Al-LEA.eam.alloy Al
 
-dump 			1 all cfg 1000 ./dump/fcc/dump.tensile_*.cfg mass type xs ys zs vx vy vz q id
-dump			2 all atom 1000 ./tmp/fcc/tmp.dump
+dump 			1 all cfg 1000 ./dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz q id
+dump			2 all atom 1000 ./tmp/tmp.dump
 dump_modify     1 element Al
 
 # Additional commands to run the simulation
 thermo 100
 run 10000
 
-write_data ./endconf/bcc/endconf*1.data
+write_data ./endconf/endconf*1.data

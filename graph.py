@@ -1,61 +1,22 @@
-import pandas as pd
 import matplotlib.pyplot as plt
-import chardet
-import openpyxl
 
-# from git.RandomPrograms.li_dokiman import li_csv
+duree_chauffe = [0.1, 1, 10, 100]
+ord1 = [27.47, 82.65, 99.95, 100]
+ord2 = [27.47, 91.11, 96.19, 100]
 
-# import numpy
-
-
-def read_data(filepath: str):
-    "..."
-    coord = pd.read_csv(filepath, delimiter="\s+", header=0)
-    return coord["Step"], coord["PotEng"], coord["Temp"]
-
-
-def graph(abscisse, ordonnee1, ordonnee2):
-    "..."
-    # plt.title(
-    #  "Avancement de la formation du Cluster et de la temperature en fonction du temps"
-    # )
-    plt.subplot(121)
-    plt.plot(abscisse, ordonnee1, "*")
-    plt.xlabel("Time (10^-16 s)")
-    plt.ylabel("Potential Energy")
-    plt.subplot(122)
-    plt.plot(abscisse, ordonnee2, "*")
-    plt.xlabel("Time (10^-16 s)")
-    plt.ylabel("Temperature (K)")
-    plt.show()
-
-
-PATH = "data.txt"
-# lecture du fichier
-with open(PATH, "rb") as file:
-    raw_data = file.read()
-    # dialect = csv.Sniffer().sniff(file.read(1024))
-    # separator = dialect.delimiter
-    # print(f"Detected separator: {separator}")
-    # for string in csv_string:
-    #    print(string)
-
-# Detect the encoding of the file
-result = chardet.detect(raw_data)
-encoding = result["encoding"]
-print(encoding)
-
-# csv_file = StringIO(csv_string)
-# Creation du Pandas Dataframe
-df = pd.read_csv(
-    PATH, sep=None, encoding=encoding, error_bad_lines=False, warn_bad_lines=True
+plt.suptitle(
+    "Pourcentage de formation du cluster C8 en fonction de la duree de chauffage"
 )
-# print(df.sep)
-
-# Écrire les données dans un fichier Excel
-df.to_excel("./Mol_dyna.xlsx")
-
-
-# if __name__ == "__main__":
-# abscisse, ordonnee1, ordonnee2 = read_data("data0.txt")
-# graph(abscisse, ordonnee1, ordonnee2)
+plt.plot(duree_chauffe, ord1, "rs-", label="Ubuntu 22.04.3 & LAMMPS 29 Sep 2021")
+plt.plot(duree_chauffe, ord2, "go-", label="Ubuntu 24.04 & LAMMPS 7 Feb 2024")
+plt.legend(loc="upper right")
+plt.xlabel("Duree de chauffage (ns)")
+plt.ylabel("Pourcentage de formation (%)")
+plt.xscale("log")
+plt.legend()
+for i, txt in enumerate(ord1):
+    plt.text(duree_chauffe[i], ord1[i], f"{txt}%", fontsize=9, ha="right")
+for i, txt in enumerate(ord2):
+    plt.text(duree_chauffe[i], ord2[i], f"{txt}%", fontsize=9, ha="right")
+plt.show()
+plt.close()

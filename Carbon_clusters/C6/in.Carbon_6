@@ -14,7 +14,7 @@ variable 		iexport index 1000         #
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
-variable 		box_size index 100		   #
+variable 		box_size index 40		   #
 ############################################
 ############################################
 
@@ -34,8 +34,8 @@ mass 			* 12.01
 velocity 		all create 0.0000001 1563967 rot yes dist gaussian
 
 #======Pair style for atom interactions=============
-pair_style 		airebo 1.8
-pair_coeff 		* * CH.airebo C
+pair_style 		rebo
+pair_coeff 		* * CH.rebo C
 
 #==============Neighbor selection===================
 neighbor 		2.0 bin
@@ -46,7 +46,7 @@ neigh_modify 	every 1 delay 0 check yes
 timestep 		${timestep}
 
 #===============Define dump command=================
-dump 			1 all cfg 100000 ./dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz id
+dump 			1 all cfg 100000 C6/dump/dump.tensile_*.cfg mass type xs ys zs vx vy vz id
 
 #========System temperature printing info===========
 thermo_style 	custom step temp etotal epair pe ke
@@ -62,7 +62,7 @@ fix 			2 all temp/berendsen 0.0 ${tempchauf} ${Tdamp}
 fix             3 all momentum 1 linear 1 1 1 angular rescale
 
 run 			${iter}
-write_restart 	./endconf/endconf*1.restart
+write_restart 	C6/endconf/endconf*1.restart
 
 #==============Constant Temp Phase==================
 
@@ -74,7 +74,7 @@ unfix 			2
 fix 			4 all temp/berendsen ${tempchauf} ${tempchauf} ${Tdamp}
 
 run 			${iterther}
-write_restart 	./endconf/endconf*2.restart
+write_restart 	C6/endconf/endconf*2.restart
 
 #=================Cooling Phase=====================
 
@@ -86,5 +86,5 @@ unfix 			4
 fix 			5 all temp/berendsen ${tempchauf} 0.0 ${Tdamp}
 
 run 			${iter}
-write_restart 	./endconf/endconf*3.restart
+write_restart 	C6/endconf/endconf*3.restart
 

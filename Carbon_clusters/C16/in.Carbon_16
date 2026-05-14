@@ -6,7 +6,7 @@ boundary 		p p p
 ############################################
 #              CLI Variables               #
 ############################################
-variable 		seed index 625000          #
+variable 		seed index 200093          #
 variable 		N index 18                 #
 variable 		iter index 1000000         #
 variable 		iterther index 100000      #
@@ -14,7 +14,7 @@ variable 		iexport index 1000         #
 variable 		tempchauf index 3000       #
 variable 		Tdamp index 0.001          #
 variable 		timestep index 0.0001      #
-variable 		box_size index 30		   #
+variable 		box_size index 20		   #
 ############################################
 ############################################
 
@@ -33,8 +33,8 @@ mass 			* 12.01
 velocity 		all create 0.0000001 1563967 rot yes dist gaussian
 
 #======Pair style for atom interactions=============
-pair_style 		rebo
-pair_coeff 		* * CH.rebo C
+pair_style 		airebo 1.8
+pair_coeff 		* * CH.airebo C
 
 #==============Neighbor selection===================
 neighbor 		0.3 bin
